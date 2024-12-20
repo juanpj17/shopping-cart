@@ -1,0 +1,2 @@
+class GetUserByIdQuery():
+    id : str

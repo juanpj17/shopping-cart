@@ -1,0 +1,1 @@
+from .register_inventory_command import RegisterInventoryCommand
