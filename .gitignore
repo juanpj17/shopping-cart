@@ -5,6 +5,7 @@
 /.env
 alembic/
 alembic.ini/
+/alembic.ini
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
