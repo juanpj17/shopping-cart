@@ -22,3 +22,8 @@ class CartRepository(ABC):
     @abstractmethod
     def remove_product(self):
         pass
+
+    @abstractmethod
+    def archive_cart(self):
+        pass
+

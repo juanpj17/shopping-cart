@@ -12,14 +12,9 @@ class RegisterInventoryService(Service[RegisterInventoryCommand, None], Subscrib
         self.inventory_repository = inventory_repository
  
     def update(self, data: RegisterInventoryCommand):
-        print(data)
         self.execute(data)
         
     def execute(self, data: RegisterInventoryCommand):
         _id = self.uuid_service.generate_id()
         inventory = Inventory(_id, data.product_id, 0)
-        print(inventory._id)
-        print(inventory.product_id)
-        print(_id)
-        print(data.product_id)
         self.inventory_repository.save_inventory(inventory)     

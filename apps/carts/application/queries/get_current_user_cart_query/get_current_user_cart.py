@@ -13,12 +13,20 @@ class GetCurrentUserCartService(Service[GetCurrentUserCartQuery, List[GetCurrent
 
     def execute(self, data: GetCurrentUserCartQuery):
         cart_id, products = self.cart_repository.get_cart_by_user(data.user_id)
+        cart = self.cart_repository.get_cart_by_id(cart_id)
+
+        if cart.is_archived:
+            return Result[List[GetCurrentUserCartResponse]].make_failure(error = CartNotFoundError())
         if len(products) == 0: return Result[List[GetCurrentUserCartResponse]].make_success(value = {"cart_id": cart_id, "products": 0})
         
+        if cart is None or not cart.order_id:
+            cart.order_id = "Not assigned"
+
         list_of_products = []
         for product in products:
             item = GetCurrentUserCartResponse(
                 cart_id = product.cart_id,
+                order_id = cart.order_id,
                 product_id = product.product_id,
                 price = product.unit_price,
                 quantity = product.quantity

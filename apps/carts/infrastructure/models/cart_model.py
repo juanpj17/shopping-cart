@@ -10,8 +10,9 @@ class CartModel(SQLModel, table=True):
     __tablename__: str = "cart"
 
     entity_id: str = Field(max_length=256, primary_key=True)  
-    user_id: str = Field(index=True, max_length=256, nullable=False, unique=True)  
+    user_id: str = Field(max_length=256, nullable=False)  
     order_id: str = Field(max_length=256, nullable=True, unique=True)   
+    is_archived: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.now)  
 
     def __str__(self):
@@ -23,7 +24,7 @@ class ProductCartModel(SQLModel, table=True):
     id: str = Field(max_length=256, primary_key=True)  
     cart_id: str = Field(max_length=256, nullable=False)  
     product_id: str = Field(max_length=256, nullable=True) 
-    quantity: float = Field(nullable=False, ge = 0)  
+    quantity: int = Field(nullable=False, ge = 0)  
     unit_price: float = Field(nullable=False, ge = 0) 
     created_at: datetime = Field(default_factory=datetime.now)  
 

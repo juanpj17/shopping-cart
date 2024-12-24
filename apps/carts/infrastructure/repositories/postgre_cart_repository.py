@@ -1,5 +1,5 @@
 from typing import Dict, Optional, List
-from sqlmodel import select, delete, SQLModel
+from sqlmodel import select, delete, update, SQLModel
 from datetime import datetime
 from sqlalchemy.exc import SQLAlchemyError
 from core.infrastructure.db_session.postgre_session import DBSession
@@ -54,7 +54,9 @@ class PostgreCartRepository(CartRepository):
         return response
     
     def get_cart_by_user(self, id: str):
-        statement = select(CartModel).where(CartModel.user_id == id)
+        statement = select(CartModel).where(
+            (CartModel.user_id == id) & (CartModel.is_archived == False)  
+        )
         response = self.session.exec(statement).first()
         
         statement = select(ProductCartModel).where(ProductCartModel.cart_id == response.entity_id)
@@ -63,7 +65,7 @@ class PostgreCartRepository(CartRepository):
 
     def get_products_in_cart(self, id: str):
         statement = select(ProductCartModel).where(ProductCartModel.cart_id == id)
-        response = self.session.exec(statement).first()
+        response = self.session.exec(statement).all()
         return response
     
     def remove_product(self, id: str):
@@ -71,3 +73,11 @@ class PostgreCartRepository(CartRepository):
         self.session.exec(statement)
         self.session.commit()
         
+    def archive_cart(self, cart_id: str):
+        try:
+            statement = update(CartModel).where(CartModel.id == cart_id).values(is_archived=True)
+            self.session.exec(statement)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise RuntimeError(f"Error archiving cart with ID {cart_id}: {e}")

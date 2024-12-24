@@ -1,7 +1,9 @@
+from typing import Optional
 from apps.inventories.domain.repositories.inventory_repository import InventoryRepository
 from apps.products.domain.repositories.product_repository import ProductRepository
 from apps.products.application.exceptions.product_not_found import ProductNotFoundError
 from core.application.services.application_service import Service
+from core.application.events.subscriber import Subscriber
 from core.application.results.result import Result
 from core.infrastructure.providers.uuid_service import UUIDService
 from .types.update_cart_command import UpdateCartCommand
@@ -10,7 +12,7 @@ from ...exceptions.cart_not_found import CartNotFoundError
 from ....domain.repositories.cart_repository import CartRepository
 from ....domain.cart import Cart
 
-class UpdateProductService(Service[UpdateCartCommand,str]):
+class UpdateProductService(Service[UpdateCartCommand,str], Subscriber[UpdateCartCommand]):
 
     def __init__(
             self,
@@ -22,10 +24,14 @@ class UpdateProductService(Service[UpdateCartCommand,str]):
         self.product_repository = product_repository
         self.inventory_repository = inventory_repository
         self.uuid_service = UUIDService
+    
+    def update(self, data: UpdateCartCommand):
+        self.execute(data)
 
     def execute(self, data = UpdateCartCommand):
         res = self.cart_repository.get_cart_by_id(data.cart_id)
-        cart = Cart(_id = data.cart_id, user_id = res.user_id, order_id = None, products = None)
+        if res.is_archived: return Result[str].make_failure(error = CartNotFoundError())
+        cart = Cart(_id = data.cart_id, user_id = res.user_id, order_id = data.order_id, products = None)
         if not cart: return Result[str].make_failure(error = CartNotFoundError())
 
         list_of_products = []

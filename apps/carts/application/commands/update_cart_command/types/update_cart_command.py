@@ -7,6 +7,7 @@ class Item(BaseModel):
 
 class UpdateCartCommand(BaseModel):
     cart_id: str
+    order_id: str
     products: List[Item]
 
 
