@@ -1,8 +1,14 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,venv
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,venv
 
-.env/
-/.env
+# Ignorar archivo alembic.ini
+alembic.ini
+
+# Ignorar archivo .env
+.env.template
+
+.env.template/
+/.env.template
 alembic/
 alembic.ini/
 /alembic.ini

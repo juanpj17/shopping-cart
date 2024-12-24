@@ -46,6 +46,7 @@ class PostgreProductRepository(ProductRepository):
     def remove_product(self, id):
         statement = delete(ProductModel).where(ProductModel.entity_id == id)
         self.session.exec(statement)
+        self.session.commit()
 
     def get_product_by_id(self, id):
         statement = select(ProductModel).where(ProductModel.entity_id == id)

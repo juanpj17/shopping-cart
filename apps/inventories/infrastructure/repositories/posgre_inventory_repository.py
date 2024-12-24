@@ -2,7 +2,7 @@ from ...domain.repositories.inventory_repository import InventoryRepository
 from ..models.inventory_model import InventoryModel
 from datetime import datetime
 from core.infrastructure.db_session.postgre_session import DBSession
-from sqlmodel import Session, select, SQLModel
+from sqlmodel import select, SQLModel
 from ..models.inventory_model import InventoryModel
 from sqlalchemy.exc import SQLAlchemyError
 from ...domain.inventory import Inventory
