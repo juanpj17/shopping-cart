@@ -5,11 +5,7 @@ services:
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - 8000:8000
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
     container_name: shopping-cart
-    env_file:
-      - .env
     networks:
       - shopping-cart_net
 
