@@ -1,3 +1,4 @@
+from apps.orders.domain.services.total_amount_domain_service import TotalOrderDomainService
 from core.application.services.application_service import Service
 from core.application.results.result import Result
 from core.application.events.publisher import Publisher
@@ -23,7 +24,8 @@ class RegisterOrderService(Service[RegisterOrderCommand ,str], Publisher[UpdateC
         total = 0
         products_in_cart = self.cart_repository.get_products_in_cart(data.cart_id)
         if len(products_in_cart) == 0: return Result[str].make_failure(value = {"cart_id": data.cart_id, "products": 0})
-        for product in products_in_cart: total += product.unit_price * product.quantity
+        total = TotalOrderDomainService().execute(products_in_cart)
+        print("Total: ", total)
         order = Order(_id = _id, user_id = data.user_id, cart_id = data.cart_id, status = StatusEnum.PENDING, total = total)
         
         data_cart = UpdateCartCommand(cart_id = data.cart_id, order_id = _id, products = [])
