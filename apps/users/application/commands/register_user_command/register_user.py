@@ -1,3 +1,4 @@
+from apps.users.application.exceptions.superuser_created import SuperUserAlreadyCreated
 from core.application.services.application_service import Service
 from core.infrastructure.providers.crypto_service import CryptoService
 from core.infrastructure.providers.uuid_service import UUIDService
@@ -15,6 +16,11 @@ class RegisterUserService(Service[RegisterUserCommand, str]):
         self.cryptoService = CryptoService
 
     def execute(self, data: RegisterUserCommand):
+        if data.role == 'Superadmin':
+            response = self.user_repository.find_admin_user()
+            for user in response:                
+                if user.role == 'Superadmin': 
+                    return Result[str].make_failure(error=SuperUserAlreadyCreated())
         id = self.idGenerator.generate_id()
         password = self.cryptoService.encrypt_password(data.password)
         user = User(id, data.username, data.email, password, data.role)

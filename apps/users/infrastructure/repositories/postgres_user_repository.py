@@ -21,6 +21,8 @@ class PostgreUserRepository(UserRepository):
                     existing_user.email = user.email
                 if existing_user.password != user.password:
                     existing_user.password = user.password
+                existing_user.updated_at=datetime.now()
+                
             else:
                 existing_user = UserModel(
                     entity_id=user._id,
@@ -28,7 +30,8 @@ class PostgreUserRepository(UserRepository):
                     email=user.email,
                     password=user.password,
                     role=user.role,
-                    created_at=datetime.now()
+                    created_at=datetime.now(),
+                    updated_at=datetime.now()
                 )
                 self.session.add(existing_user)
             self.session.commit()
@@ -51,3 +54,9 @@ class PostgreUserRepository(UserRepository):
         statement = select(UserModel).where(UserModel.entity_id == id)
         result = self.session.exec(statement).first()
         return result 
+    
+    def find_admin_user(self):
+        statement = select(UserModel)
+        results = self.session.exec(statement)
+        return results.all()
+            

@@ -1,4 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
+
+from apps.users.application.commands.update_user_command.update_manager import UpdateManagerService
 from .Dtos import ManagerDto, ClientDto, SuperAdminDto, LoginDto
 from .Dtos.get_user_by_id_dto import GetUserByIdDto
 from ...application.commands.register_user_command.register_user import RegisterUserService
@@ -34,10 +36,18 @@ def register_client(registerDto: ClientDto):
     response = service.execute(registerDto)
     return response.unwrap()
 
-@router.put('/users/update')
-def update_client(data: UpdateUserDto):
+@router.put('/users/{user_id}')
+def update_client(id:str, data: UpdateUserDto):
     service = UpdateUserService(repository)
     response = service.execute(data)
+    return response.unwrap()
+
+@router.put('/users/managers/{manager_id}')
+def update_client(id:str, data: ManagerDto, user: dict = Depends(get_user)):
+    if user.get("role") != "Superadmin":
+        raise HTTPException(status_code = 403, detail = "Forbbiden endpoint")
+    service = UpdateManagerService(repository)
+    response = service.execute(id, data)
     return response.unwrap()
 
 @router.post('/users/managers')
@@ -70,7 +80,6 @@ def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
 def get_current_user(user: dict = Depends(get_user)):
     if user is None: 
         raise HTTPException(status_code=404, detail="You are not logged")
-    
     service = GetUserByIdService(repository)
     data = GetUserByIdDto( id = user.get("id"))
     response = service.execute(data) 
