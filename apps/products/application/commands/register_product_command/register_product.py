@@ -17,13 +17,14 @@ class RegisterProductService(Service[ProductCommand, str], Publisher[RegisterInv
 
     def execute(self, data: ProductCommand):
         id = self.uuid_service.generate_id()
-        code = self.uuid_service.generate_id()
+        # code = self.uuid_service.generate_id()
         service = CalculateProductPriceService()
         price = service.execute({"cost": data.cost, "margin": data.margin})
         product = Product(
             _id = id,
-            code = code,
+            code = data.code,
             name = data.name,
+            description = data.description,
             price = price,
             cost = data.cost,
             margin = data.margin,

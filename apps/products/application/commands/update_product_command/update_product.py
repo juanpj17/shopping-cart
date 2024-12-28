@@ -10,8 +10,8 @@ class UpdateProductService(Service[UpdateProductCommand, str]):
     def __init__(self, product_repository: ProductRepository):
         self.product_repository = product_repository
 
-    def execute(self, data: UpdateProductCommand): 
-        response = self.product_repository.get_product_by_id(data.id)
+    def execute(self, id:str, data: UpdateProductCommand): 
+        response = self.product_repository.get_product_by_id(id)
 
         if not response: Result[str].make_failure(error=ProductNotFoundError())
 
@@ -37,4 +37,4 @@ class UpdateProductService(Service[UpdateProductCommand, str]):
 
 
         self.product_repository.save_product(product)
-        return Result[str].make_success(value=data.id)
+        return Result[str].make_success(value=id)

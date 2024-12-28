@@ -9,8 +9,8 @@ class RemoveProductService(Service[RemoveProductCommand, str]):
         self.product_repository = product_repository
 
     def execute(self, data: RemoveProductCommand):
-        product = self.product_repository.get_product_by_id(data.id)
+        product = self.product_repository.get_product_by_id(data)
         if not product: Result[str].make_failure(error=ProductNotFoundError())
-        self.product_repository.remove_product(data.id)
+        self.product_repository.remove_product(data)
         return Result[str].make_success(value="Product deleted correctly") 
         

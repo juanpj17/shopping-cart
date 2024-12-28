@@ -1,10 +1,11 @@
 from core.domain.entity.domain_entity import DomainEntity
 
 class Product(DomainEntity[str]):
-    def __init__(self, _id: str, code: str, name: str, price: float, cost: float, margin: float, status: str):
+    def __init__(self, _id: str, code: str, name: str, description:str, price: float, cost: float, margin: float, status: str):
         super().__init__(_id)
         self.code = code
         self.name = name
+        self.description = description
         self.price = price 
         self.cost = cost
         self.margin = margin

@@ -24,16 +24,19 @@ class PostgreProductRepository(ProductRepository):
                     existing_product.cost = product.cost
                 if existing_product.margin != product.margin:
                     existing_product.margin = product.margin
+                existing_product.updated_at=datetime.now()
             else:
                 existing_product = ProductModel(
                     entity_id=product._id,
                     code = product.code,
                     name = product.name,
+                    description = product.description,
                     price = product.price,
                     cost = product.cost,
                     margin = product.margin,
                     status = product.status,
-                    created_at=datetime.now()
+                    created_at=datetime.now(),
+                    updated_at=datetime.now()
                 )
                 self.session.add(existing_product)
             self.session.commit()

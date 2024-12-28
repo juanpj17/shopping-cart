@@ -21,8 +21,20 @@ inventory_model = InventoryModel
 inventory_repository = PostgreInventoryRepository(inventory_model)
 repository = PostgreProductRepository(product_model)
 
+@router.get("/products")
+def get_products():
+    service = GetAllProductsService(repository)
+    response = service.execute()
+    return response.unwrap()
 
-@router.post("/products/register")
+@router.get("/products/{product_id}")
+def get_product(id: str):
+    service = GetProductByIdService(repository)
+    data = GetProductByIdDto(id = id)
+    response = service.execute(data)
+    return response.unwrap()
+
+@router.post("/products")
 def register_product(
     data: RegisterProductDto,
     user: dict = Depends(get_user)
@@ -34,20 +46,21 @@ def register_product(
     response = service.execute(data)
     return response.unwrap()
 
-@router.put("/products/update")
+@router.put("/products/{product_id}")
 def update_product(
+    id: str,
     data: UpdateProductDto,
     user: dict = Depends(get_user)
 ):
     if user.get("role") not in ["Superadmin", "Manager"]:
         raise HTTPException(status_code = 403, detail = "Forbbiden endpoint")
     service = UpdateProductService(repository)
-    response = service.execute(data)
+    response = service.execute(id, data)
     return response.unwrap()
 
-@router.delete("/products/remove")
+@router.delete("/products/{product_id}")
 def delete_product(
-    data: RemoveProductDto,
+    data: str,
     user: dict = Depends(get_user)
 ):
     if user.get("role") not in ["Superadmin", "Manager"]:
@@ -57,15 +70,3 @@ def delete_product(
     return response.unwrap()
 
 
-@router.get("/products")
-def get_products():
-    service = GetAllProductsService(repository)
-    response = service.execute()
-    return response.unwrap()
-
-@router.get("/products/{id}")
-def get_product(id: str):
-    service = GetProductByIdService(repository)
-    data = GetProductByIdDto(id = id)
-    response = service.execute(data)
-    return response.unwrap()
