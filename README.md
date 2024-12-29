@@ -1,35 +1,35 @@
-# Shopping Cart API
+# 🛒 Shopping Cart API
 
-Este repositorio contiene el código y la configuración para el backend de una aplicación de comercio electrónico. Desarrollado con Python y FastAPI, este proyecto está diseñado para gestionar productos, usuarios, carritos de compras, órdenes y generar reportes básicos.
+Este repositorio contiene el código y la configuración para el backend de una aplicación de comercio electrónico. Desarrollado con 🐍 Python y 🚀 FastAPI, este proyecto está diseñado para gestionar 🛍️ productos, 👤 usuarios, 🛒 carritos de compras, 📦 órdenes y generar 📊 reportes básicos.
 
 ## Características Principales
 
-- **Gestión de usuarios:** Roles de superadministrador, gerente y cliente.
-- **Catálogo de productos:** Búsqueda, creación, edición y eliminación de productos.
-- **Carrito de compras:** Agregar y gestionar productos en el carrito.
-- **Procesamiento de órdenes:** Creación, actualización y cancelación de órdenes.
-- **Reportes básicos:** Ventas totales, ganancias y productos más vendidos.
+- **Gestión de usuarios:** Roles de 👑 superadministrador, 👔 gerente y 🧑‍💻 cliente.
+- **Catálogo de productos:** 🔍 Búsqueda, ✏️ creación, 🔧 edición y ❌ eliminación de productos.
+- **Carrito de compras:** ➕ Agregar y 🔄 gestionar productos en el carrito.
+- **Procesamiento de órdenes:** 🆕 Creación, 🔄 actualización y ❌ cancelación de órdenes.
+- **Reportes básicos:** 💵 Ventas totales, 📈 ganancias y 🔥 productos más vendidos.
 
 ## Tecnologías Utilizadas
 
-- **Lenguaje:** Python 3.13
-- **Framework:** FastAPI 0.115.4
-- **Base de Datos:** PostgreSQL
-- **ORM:** SQLModel
-- **Herramientas adicionales:** Docker, pytest, Alembic&#x20;
+- **Lenguaje:** 🐍 Python 3.13
+- **Framework:** 🚀 FastAPI 0.115.4
+- **Base de Datos:** 🐘 PostgreSQL
+- **ORM:** 🔗 SQLModel
+- **Herramientas adicionales:** 🐳 Docker, 🧪 pytest, 🎨 Alembic
 
 ## Guía de Instalación
 
 ### Requisitos Previos
 
-- Docker instalado en tu sistema.
+- 🐳 Docker instalado en tu sistema.
 - Una cuenta de DockerHub.
 
 ### Instalación y Ejecución con Docker
 
 1. **Obtén los archivos necesarios:**
 
-   Para ejecutar la aplicación con la imagen de Docker, solamente necesitas descargar el archivo docker-compose.yml que se encuentra en este repositorio. 
+   Para ejecutar la aplicación con la imagen de Docker, solamente necesitas descargar el archivo docker-compose.yml que se encuentra en este repositorio. 
 
 2. **Ingresa desde la terminal cmd:**
 
