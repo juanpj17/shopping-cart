@@ -19,12 +19,14 @@ class PostgreInventoryRepository(InventoryRepository):
             if existing_inventory:
                 if existing_inventory.quantity != inventory.quantity:
                     existing_inventory.quantity = inventory.quantity
+                existing_inventory.updated_at = datetime.now()
             else:
                 new_inventory = InventoryModel(
                     entity_id=inventory._id,
                     product_id=inventory.product_id,
                     quantity=inventory.quantity,
-                    created_at=datetime.now()
+                    created_at=datetime.now(),
+                    updated_at=datetime.now()
                 )
                 self.session.add(new_inventory)
             self.session.commit()

@@ -75,7 +75,7 @@ class PostgreCartRepository(CartRepository):
         
     def archive_cart(self, cart_id: str):
         try:
-            statement = update(CartModel).where(CartModel.id == cart_id).values(is_archived=True)
+            statement = update(CartModel).where(CartModel.entity_id == cart_id).values(is_archived=True)
             self.session.exec(statement)
             self.session.commit()
         except Exception as e:

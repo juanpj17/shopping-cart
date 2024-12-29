@@ -27,14 +27,14 @@ inventory_repository = PostgreInventoryRepository(inventory_model)
 
 
 
-@router.post("/carts/register")
+@router.post("/carts")
 def register_cart(user: dict = Depends(get_user)):
     data = RegisterCartDto(user_id = user.get("id"))
     service = RegisterCartService(repository)
     response = service.execute(data)
     return response.unwrap()
 
-@router.put("/carts/add/product")
+@router.put("/carts/items/{product_id}")
 def update_cart(
     data: UpdateCartDto,
     user: dict = Depends(get_user)
@@ -43,7 +43,7 @@ def update_cart(
     response = service.execute(data)
     return response.unwrap()
 
-@router.get("/carts/get")
+@router.get("/carts")
 def get_cart(
     user: dict = Depends(get_user)
 ):
@@ -53,7 +53,7 @@ def get_cart(
     return response.unwrap()
 
 
-@router.delete("/carts/{product_id}")
+@router.delete("/carts/items/{product_id}")
 def get_cart(
     product_id: str,
     user: dict = Depends(get_user)

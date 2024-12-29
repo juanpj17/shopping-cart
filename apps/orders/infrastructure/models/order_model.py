@@ -14,6 +14,7 @@ class OrderModel(SQLModel, table=True):
     status: str = Field(max_length=32, nullable=False)  
     total: str = Field(max_length=128, nullable=False)  
     created_at: datetime = Field(default_factory=datetime.now)  
+    updated_at: datetime = Field(default_factory=datetime.now)
 
     def __str__(self):
         return self.__tablename__

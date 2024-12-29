@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlmodel import select, SQLModel
+from sqlmodel import select,update, SQLModel
 from sqlalchemy.exc import SQLAlchemyError
 from core.infrastructure.db_session.postgre_session import DBSession
 from ..models.order_model import OrderModel
@@ -50,3 +50,12 @@ class PostgreOrderRepository(OrderRepository):
         except SQLAlchemyError as error:
             self.session.rollback()
             raise RuntimeError(f"Error searching all orders: {error}")
+        
+    def change_status(self, order_id: str, new_status: str):
+        try:
+            statement = update(self.order_model).where(self.order_model.entity_id == order_id).values(status=new_status, updated_at=datetime.now())
+            self.session.exec(statement)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise RuntimeError(f"Error archiving cart with ID {order_id}: {e}")
