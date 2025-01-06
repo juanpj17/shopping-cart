@@ -39,7 +39,7 @@ def get_total_sales(
         raise HTTPException(status_code = 403, detail = "Forbbiden endpoint")
     service = GetTotalSales(report_repository)
     response = service.execute()
-    print(response.unwrap)
+    #print(response.unwrap)
     return response.unwrap()
 
 # VENTAS DE PRODUCTO POR ID
@@ -53,7 +53,7 @@ def get_product_sales_by_id(
     data = ProductSalesByIdDto(product_id = product_id)
     service = GetProductSalesById(report_repository)
     response = service.execute(data)
-    print(response.unwrap)
+    #print(response.unwrap)
     return response.unwrap()
 
 # GANANCIAS TOTALES
@@ -65,7 +65,7 @@ def get_total_profit(
         raise HTTPException(status_code = 403, detail = "Forbbiden endpoint")
     service = GetTotalProfits(report_repository)
     response = service.execute()
-    print(response.unwrap)
+    #print(response.unwrap)
     return response.unwrap()
 
 # GANANCIAS DE PRODUCTO POR ID
@@ -79,7 +79,7 @@ def get_product_profit_by_id(
     data = ProductProfitByIdDto(product_id = product_id)
     service = GetProductProfitsById(report_repository)
     response = service.execute(data)
-    print(response.unwrap)
+    #print(response.unwrap)
     return response.unwrap()
 
 # PRODUCTOS TOP
@@ -91,7 +91,7 @@ def get_top_products(
         raise HTTPException(status_code = 403, detail = "Forbbiden endpoint")
     service = GetTopProducts(report_repository)
     response = service.execute()
-    print(response.unwrap)
+    #print(response.unwrap)
     return response.unwrap()
 
 # USUARIOS TOP
@@ -103,5 +103,5 @@ def get_top_users(
         raise HTTPException(status_code = 403, detail = "Forbbiden endpoint")
     service = GetTopUsers(report_repository)
     response = service.execute()
-    print(response.unwrap)
+    #print(response.unwrap)
     return response.unwrap()
