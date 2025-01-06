@@ -2,12 +2,10 @@ import pytest
 from unittest.mock import MagicMock
 from core.application.results.result import Result
 from apps.products.application.commands.register_product_command.register_product import RegisterProductService
-#from apps.products.infrastructure.repositories.postgre_product_repository import ProductRepository
 from apps.products.domain.product import Product
 from apps.products.application.commands.register_product_command.types.product_command import ProductCommand
 from core.infrastructure.providers.uuid_service import UUIDService
 from apps.products.domain.services.calculate_product_price import CalculateProductPriceService
-from apps.inventories.application.commands.register_inventory_command import RegisterInventoryCommand
 
 # Crear un mock de UUIDService
 @pytest.fixture

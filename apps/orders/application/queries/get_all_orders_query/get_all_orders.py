@@ -11,7 +11,7 @@ class GetAllOrdersServices(Service[None, List[Order]]):
     
     def execute(self):
         orders = self.order_repository.get_all_orders()
-        if len(orders) == 0: Result[List[Order]].make_failure(error = OrdersNotFoundError())
+        if len(orders) == 0: return Result[List[Order]].make_failure(error = OrdersNotFoundError())
 
         list_of_orders = []
         for item in orders:
