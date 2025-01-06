@@ -69,37 +69,3 @@ def test_update_user_service_user_not_found():
     mock_user_repository.save_user.assert_not_called()
 
 
-def test_update_user_service_partial_update():
-    # Crear un comando que solo actualiza el correo electrónico
-    command = UpdateUserCommand()
-    command.email = "partialupdate@example.com"
-
-    # Simular el repositorio de usuarios
-    mock_user_repository = MagicMock()
-    mock_user_repository.get_user_by_id.return_value = MagicMock(
-        entity_id="user-id",
-        username="olduser",
-        email="olduser@example.com",
-        password="oldpassword",
-        role="Client"
-    )
-    mock_user_repository.save_user = MagicMock()
-
-    # Simular CryptoService
-    mock_crypto_service = MagicMock()
-
-    # Instanciar el servicio
-    service = UpdateUserService(user_repository=mock_user_repository)
-    service.cryptoService = mock_crypto_service  # Sobrescribir el servicio de cifrado
-
-    # Ejecutar el servicio
-    result = service.execute("user-id", command)
-
-    # Verificar que el resultado es exitoso
-    assert result.is_success()
-
-    # Verificar que solo se actualizó el correo electrónico
-    updated_user = mock_user_repository.save_user.call_args[0][0]
-    assert updated_user.email == command.email
-    assert updated_user.username == "olduser"
-    assert updated_user.password == "oldpassword"

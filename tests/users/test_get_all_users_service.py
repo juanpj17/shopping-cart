@@ -29,7 +29,6 @@ def test_get_all_users_service_success():
     assert result.value[0].username == "user1"
     assert result.value[1].username == "user2"
 
-#Arrange
 def test_get_all_users_service_no_users_found():
     # Crear un mock del repositorio que retorna una lista vacía
     mock_user_repository = MagicMock()
@@ -37,10 +36,10 @@ def test_get_all_users_service_no_users_found():
 
     # Instanciar el servicio con el repositorio simulado
     service = GetAllUsersService(user_repository=mock_user_repository)
-#Act
+
     # Ejecutar el servicio
     result = service.execute()
-#Assert
+
     # Verificar que el resultado es un fallo
     assert result.is_failure()
     assert isinstance(result.error, NoUserFoundError)
