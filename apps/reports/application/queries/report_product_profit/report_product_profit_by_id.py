@@ -1,6 +1,6 @@
 from apps.products.application.exceptions.product_not_found import ProductNotFoundError
 from apps.products.domain.product import Product
-from type.get_product_by_id_query import GetProductByIDQuery
+from apps.reports.application.queries.type.get_product_by_id_query import GetProductByIDQuery
 from core.application.services.application_service import Service
 from core.application.results.result import Result
 from ....infrastructure.repositories.postgre_reports_repository import ReportsRepository
