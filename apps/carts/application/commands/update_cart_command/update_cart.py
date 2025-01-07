@@ -31,7 +31,7 @@ class UpdateProductService(Service[UpdateCartCommand,str], Subscriber[UpdateCart
     def execute(self, data = UpdateCartCommand):
         res = self.cart_repository.get_cart_by_id(data.cart_id)
         if res.is_archived: return Result[str].make_failure(error = CartNotFoundError())
-        cart = Cart(_id = data.cart_id, user_id = res.user_id, order_id = data.order_id, products = None)
+        cart = Cart(_id = data.cart_id, user_id = res.user_id, products = None)
         if not cart: return Result[str].make_failure(error = CartNotFoundError())
 
         list_of_products = []

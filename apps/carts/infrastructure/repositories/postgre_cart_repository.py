@@ -23,7 +23,7 @@ class PostgreCartRepository(CartRepository):
                 new_cart = CartModel(
                     entity_id = cart._id,
                     user_id = cart.user_id,
-                    order_id = cart.order_id,
+                    order_id = None,
                     created_at = datetime.now()
                 )
 
@@ -34,6 +34,7 @@ class PostgreCartRepository(CartRepository):
                     new_product_cart = ProductCartModel(
                         id = product.get("id"),
                         cart_id = cart._id,
+                        order_id = None,
                         product_id = product.get("product_id"),
                         quantity = product.get("quantity"),
                         unit_price = product.get("unit_price"),
@@ -41,7 +42,7 @@ class PostgreCartRepository(CartRepository):
                     )
                     self.session.add(new_product_cart)
 
-            if cart.order_id: existing_cart.order_id = cart.order_id
+            #if cart.order_id: existing_cart.order_id = cart.order_id
             self.session.commit()
         except SQLAlchemyError as e:
             self.session.rollback()

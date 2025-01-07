@@ -7,5 +7,4 @@ class Item(BaseModel):
 
 class UpdateCartDto(BaseModel):
     cart_id: str
-    order_id: str
     products: List[Item]
