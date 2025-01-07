@@ -1,8 +1,5 @@
 import sqlalchemy
 from apps.reports.domain.product_sales_report import ProductSalesReport
-from apps.reports.domain.top_product import TopProduct
-from apps.reports.domain.top_products_report import TopProducts
-from apps.reports.domain.top_user_count import TopUserCount
 from apps.reports.domain.total_profit import TotalProfit
 from core.infrastructure.db_session.postgre_session import DBSession
 from sqlmodel import cast, select, func, desc
@@ -88,27 +85,8 @@ class PostgreReportsRepository(ReportsRepository):
         results = self.session.exec(statement).all()
         return [TotalProfit(name=row[0], total_income=row[1], profit=row[2]) for row in results]
     
-# VENTAS DE PRODUCTO POR ID
+# GANANCIAS DE PRODUCTO POR ID
     def get_product_profit_by_id(self, id): 
-        statement = (
-            select(
-                ProductModel.name,
-                func.sum(ProductCartModel.quantity).label("quantity"),
-                func.sum(ProductCartModel.unit_price * ProductCartModel.quantity).label("amount"),
-            )
-            .join(CartModel, CartModel.entity_id == ProductCartModel.cart_id)
-            .join(OrderModel, OrderModel.cart_id == CartModel.entity_id)
-            .join(ProductModel, ProductModel.entity_id == ProductCartModel.product_id)
-            .where(OrderModel.status == "completed")
-            .where(ProductModel.entity_id == id)
-            .group_by(ProductModel.name)
-        )
-        results = self.session.exec(statement).all()
-        return [ProductSalesReport(name=row[0], quantity=row[1], amount=row[2]) for row in results]
-
-# GANACIAS DE PRODUCTO POR ID
-    
-    def get_product_total_profit_by_id(self, id): 
         statement = (
             select(
                 ProductModel.name,
@@ -119,39 +97,35 @@ class PostgreReportsRepository(ReportsRepository):
             .join(OrderModel, OrderModel.cart_id == CartModel.entity_id)
             .join(ProductModel, ProductModel.entity_id == ProductCartModel.product_id)
             .where(OrderModel.status == "completed")
-            .where(ProductModel.entity_id == id)   
-            .group_by(ProductModel.name)
+            .where(ProductModel.entity_id == id)
         )
-        results = self.session.exec(statement).all()
-        return [TotalProfit(name=row[0], total_income=row[1], profit=row[2]) for row in results]
+        result = self.session.exec(statement).first()   
+        return result
+
+# VENTAS DE PRODUCTO POR ID
+    def get_product_sales_by_id(self, id): #requires JOINS FROM order.status = completed, products, cart
+        statement = select(ProductModel.entity_id, func.count(ProductCartModel.product_id).label("sales")).where(ProductCartModel.product_id == id, 
+                                                                                                                 ProductCartModel.cart_id == CartModel.entity_id, 
+                                                                                                                 CartModel.order_id == OrderModel.entity_id, 
+                                                                                                                 OrderModel.status == 'completed', 
+                                                                                                                 ProductModel.entity_id == id).group_by(ProductModel.entity_id)
+                                                                                                   
+        response = self.session.exec(statement)
+        return response
+
 
 # PRODUCTOS TOP
     def get_top_products(self): #requires JOINS FROM order.status = completed, products, cart
-        statement = (
-            select(
-                ProductModel.name,
-                func.sum(ProductCartModel.quantity).label("total_quantity"),
-            )
-            .join(CartModel, CartModel.entity_id == ProductCartModel.cart_id)
-            .join(OrderModel, OrderModel.cart_id == CartModel.entity_id)
-            .join(ProductModel, ProductModel.entity_id == ProductCartModel.product_id)
-            .where(OrderModel.status == "completed")
-            .group_by(ProductModel.name)
-            .order_by(func.sum(ProductCartModel.quantity).desc())
-        )
-        results = self.session.exec(statement).all()
-        return [TopProduct(name=row[0], total_quantity=row[1]) for row in results]
+        statement = select(ProductModel.entity_id, func.count(OrderModel.entity_id).label("sales")).where(ProductCartModel.product_id == ProductModel.entity_id, 
+                                                                                            ProductCartModel.cart_id == CartModel.entity_id,
+                                                                                            CartModel.order_id == OrderModel.entity_id, 
+                                                                                            OrderModel.status == 'completed').group_by(ProductModel.entity_id).order_by(ProductModel.entity_id, desc("sales"))
+        response = self.session.exec(statement)
+        return response
+
 # USUARIOS TOP
     def get_top_users(self): #requires JOINS FROM order.status = completed, users
-        statement = (
-        select(
-            UserModel.username,
-            func.count(OrderModel.entity_id).label("order_count"),
-        )
-        .join(OrderModel, OrderModel.user_id == UserModel.entity_id)
-        .where(OrderModel.status == "completed")
-        .group_by(UserModel.username)
-        .order_by(func.count(OrderModel.entity_id).desc())
-        )
-        results = self.session.exec(statement).all()
-        return [TopUserCount(name=row[0], total_orders=row[1]) for row in results]
+        statement = select(UserModel.entity_id, func.count(OrderModel.entity_id).label("purchases")).where(OrderModel.user_id == UserModel.entity_id, 
+                                                                                                           OrderModel.status == 'completed').group_by(UserModel.entity_id).order_by(UserModel.entity_id, desc("purchases"))
+        response = self.session.exec(statement)
+        return response

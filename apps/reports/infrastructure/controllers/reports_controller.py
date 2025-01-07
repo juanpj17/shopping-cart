@@ -27,7 +27,7 @@ order_repository = PostgreOrderRepository(OrderModel)
 cart_repository = PostgreCartRepository(CartModel, ProductCartModel)
 product_repository = PostgreProductRepository(ProductModel)
 user_repository = PostgreUserRepository(UserModel)
-report_repository = PostgreReportsRepository()
+report_repository = PostgreReportsRepository(OrderModel, ProductModel, CartModel, ProductCartModel, UserModel)
 
 
 # VENTAS TOTALES
@@ -39,8 +39,10 @@ def get_total_sales(
         raise HTTPException(status_code = 403, detail = "Forbbiden endpoint")
     service = GetTotalSales(report_repository)
     response = service.execute()
-    #print(response.unwrap)
-    return response.unwrap()
+    if response.is_success():
+        return response.value
+    else:
+        raise HTTPException(status_code=404, detail="No sales found.")
 
 # VENTAS DE PRODUCTO POR ID
 @router.get('/reports/sales/{product_id}')
@@ -50,10 +52,8 @@ def get_product_sales_by_id(
 ):
     if user.get("role") not in ["Superadmin", "Manager"]:
         raise HTTPException(status_code = 403, detail = "Forbbiden endpoint")
-    data = ProductSalesByIdDto(product_id = product_id)
     service = GetProductSalesById(report_repository)
-    response = service.execute(data)
-    #print(response.unwrap)
+    response = service.execute(product_id)
     return response.unwrap()
 
 # GANANCIAS TOTALES
@@ -65,21 +65,18 @@ def get_total_profit(
         raise HTTPException(status_code = 403, detail = "Forbbiden endpoint")
     service = GetTotalProfits(report_repository)
     response = service.execute()
-    #print(response.unwrap)
     return response.unwrap()
 
 # GANANCIAS DE PRODUCTO POR ID
-@router.get('reports/profit/{product_id}')
+@router.get('/reports/profit/{product_id}')
 def get_product_profit_by_id(
     product_id: str, 
     user: dict = Depends(get_user)
 ):
     if user.get("role") not in ["Superadmin", "Manager"]:
         raise HTTPException(status_code = 403, detail = "Forbbiden endpoint")
-    data = ProductProfitByIdDto(product_id = product_id)
     service = GetProductProfitsById(report_repository)
-    response = service.execute(data)
-    #print(response.unwrap)
+    response = service.execute(product_id)
     return response.unwrap()
 
 # PRODUCTOS TOP
@@ -91,7 +88,6 @@ def get_top_products(
         raise HTTPException(status_code = 403, detail = "Forbbiden endpoint")
     service = GetTopProducts(report_repository)
     response = service.execute()
-    #print(response.unwrap)
     return response.unwrap()
 
 # USUARIOS TOP
@@ -103,5 +99,4 @@ def get_top_users(
         raise HTTPException(status_code = 403, detail = "Forbbiden endpoint")
     service = GetTopUsers(report_repository)
     response = service.execute()
-    #print(response.unwrap)
     return response.unwrap()
