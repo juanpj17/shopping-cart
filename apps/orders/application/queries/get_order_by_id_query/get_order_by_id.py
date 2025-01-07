@@ -11,7 +11,7 @@ class GetOrderByIdService(Service[GetOrderByIdQuery, Order]):
     
     def execute(self, data: GetOrderByIdQuery):
         order = self.order_repository.get_order_by_id(data.order_id)
-        if not order: Result[Order].make_failure(error = OrderNotFoundError())
+        if not order: return Result[Order].make_failure(error = OrderNotFoundError())
         order = Order(order.entity_id, order.user_id, order.cart_id, order.status, order.total)
 
         return Result[Order].make_success(value = order)

@@ -13,12 +13,16 @@ class UpdateProductService(Service[UpdateProductCommand, str]):
     def execute(self, id:str, data: UpdateProductCommand): 
         response = self.product_repository.get_product_by_id(id)
 
-        if not response: Result[str].make_failure(error=ProductNotFoundError())
+        if not response: 
+         return Result[str].make_failure(error=ProductNotFoundError())
+
+       # if not response: Result[str].make_failure(error=ProductNotFoundError())
 
         product = Product(
-            _id = data.id,
+            _id = id,
             code = response.code,
             name = response.name,
+            description="",
             price = response.price,
             cost = response.cost,
             margin = response.margin,
