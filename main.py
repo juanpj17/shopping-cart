@@ -6,7 +6,7 @@ from apps.carts.infrastructure.controllers.cart_controller import router as cart
 from apps.orders.infrastructure.controllers.order_controller import router as order_router
 from apps.reports.infrastructure.controllers.reports_controller import router as report_router
 from dotenv import load_dotenv
-
+ 
 app = FastAPI()
 
 load_dotenv()

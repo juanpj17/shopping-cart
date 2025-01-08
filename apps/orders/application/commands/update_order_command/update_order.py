@@ -14,6 +14,7 @@ class UpdateOrderService(Service[UpdateOrderCommand, str]):
         self.order_repository = order_repository
 
     def execute(self, data: UpdateOrderCommand):
+        
         if data.status == "completed":
             cart_id, products_in_cart = self.cart_repository.get_cart_by_user(data.user_id)
             for product in products_in_cart: 

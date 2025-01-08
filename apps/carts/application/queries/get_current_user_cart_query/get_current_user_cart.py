@@ -26,7 +26,6 @@ class GetCurrentUserCartService(Service[GetCurrentUserCartQuery, List[GetCurrent
         for product in products:
             item = GetCurrentUserCartResponse(
                 cart_id = product.cart_id,
-                order_id = cart.order_id,
                 product_id = product.product_id,
                 price = product.unit_price,
                 quantity = product.quantity

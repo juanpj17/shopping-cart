@@ -15,7 +15,7 @@ class ReportsRepository(ABC):
         pass
 
     @abstractmethod
-    def get_product_sales_by_id(self, id):
+    def get_product_total_profit_by_id(self, id):
         pass
 
     @abstractmethod

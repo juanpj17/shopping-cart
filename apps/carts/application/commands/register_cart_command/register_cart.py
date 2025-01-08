@@ -12,6 +12,6 @@ class RegisterCartService(Service[RegisterCartCommand, str]):
 
     def execute(self, data: RegisterCartCommand):
         _id = self.uuid_service.generate_id()
-        cart = Cart(_id, data.user_id, None, None)
+        cart = Cart(_id, data.user_id, None)
         self.cart_repository.save_cart(cart, products = None)
         return Result[str].make_success(value = _id)
